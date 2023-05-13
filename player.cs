@@ -15,6 +15,9 @@ public class player : MonoBehaviour
     bool jDown;
     bool dDown;
     bool iDown;
+    bool sDown1;
+    bool sDown2;
+    bool sDown3;
 
     bool isJump;
     bool isDodge;
@@ -43,6 +46,7 @@ public class player : MonoBehaviour
         Turn();
         Jump();
         Dodge();
+        Swap();
         Interation();
     }
 
@@ -55,6 +59,9 @@ public class player : MonoBehaviour
         jDown = Input.GetButtonDown("Jump"); //점프
         dDown = Input.GetButtonDown("Dodge"); //구르기
         iDown = Input.GetButtonDown("Interation"); //상호작용
+        sDown1 = Input.GetButtonDown("Swap1");
+        sDown2 = Input.GetButtonDown("Swap2");
+        sDown3 = Input.GetButtonDown("Swap3");
     }
 
     void Move()
@@ -103,6 +110,18 @@ public class player : MonoBehaviour
     {
         speed *= 0.5f;
         isDodge = false;
+    }
+
+    void Swap()
+    {   
+        int weaponIndex = -1;
+        if(sDown1) weaponIndex = 0;
+        if(sDown2) weaponIndex = 1;
+        if(sDown3) weaponIndex = 2;
+
+        if((sDown1 || sDown2 || sDown3) && !isDodge && !isJump) {
+            weapons[weaponIndex].SetActive(true);
+        }
     }
 
     void Interation()
