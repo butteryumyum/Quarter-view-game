@@ -21,6 +21,7 @@ public class player : MonoBehaviour
 
     bool isJump;
     bool isDodge;
+    bool isSwap;
     
 
     Vector3 moveVec;
@@ -31,6 +32,8 @@ public class player : MonoBehaviour
 
 
     GameObject nearObject;
+    GameObject equipWeapon;
+    int equipWeaponIndex = -1;
 
     void Awake()
     {
@@ -71,6 +74,9 @@ public class player : MonoBehaviour
        if(isDodge)
             moveVec = dodgeVec;
 
+        if(isSwap)
+            moveVec = Vector3.zero; //스왑할때 못움직임
+
          //걷기 속도감소 및 뛰기
             transform.position += moveVec * speed * (wDown ? 0.3f : 1f) * Time.deltaTime;
         
@@ -86,7 +92,7 @@ public class player : MonoBehaviour
 
     void Jump()
     {
-        if (jDown && !isJump && !dDown &&!isDodge ) {
+        if (jDown && !isJump && !dDown &&!isDodge &&!isSwap) {
             rigid.AddForce(Vector3.up * 16, ForceMode.Impulse);
             anim.SetBool("isJump", true);
             anim.SetTrigger("doJump");
@@ -96,7 +102,7 @@ public class player : MonoBehaviour
 
     void Dodge() //회피
     {
-        if (dDown && moveVec != Vector3.zero && !isJump && !isDodge && !isDodge) {
+        if (dDown && moveVec != Vector3.zero && !isJump && !isDodge && !isDodge && !isSwap && !isSwap) {
             dodgeVec = moveVec;            
             speed *= 2;
             anim.SetTrigger("doDodge");
@@ -114,14 +120,37 @@ public class player : MonoBehaviour
 
     void Swap()
     {   
+        if(sDown1 && (!hasWeapons[0] || equipWeaponIndex == 0))
+            return;
+        if(sDown2 && (!hasWeapons[1] || equipWeaponIndex == 1))
+            return;
+        if(sDown3 && (!hasWeapons[2] || equipWeaponIndex == 2))
+            return;
+
         int weaponIndex = -1;
         if(sDown1) weaponIndex = 0;
         if(sDown2) weaponIndex = 1;
         if(sDown3) weaponIndex = 2;
 
         if((sDown1 || sDown2 || sDown3) && !isDodge && !isJump) {
-            weapons[weaponIndex].SetActive(true);
+            if(equipWeapon != null)
+            equipWeapon.SetActive(false);
+
+            equipWeaponIndex = weaponIndex;
+            equipWeapon =  weapons[weaponIndex];
+            equipWeapon.SetActive(true);
+
+            anim.SetTrigger("doSwap"); 
+
+            isSwap = true;
+
+            Invoke ("SwapOut", 0.4f);
         }
+    }
+    void SwapOut()
+    {
+    
+        isSwap = false;
     }
 
     void Interation()
@@ -150,7 +179,7 @@ public class player : MonoBehaviour
         if(other.tag == "Weapon") 
             nearObject = other.gameObject;
 
-        Debug.Log(nearObject.name);
+        
     }
 
     void OnTriggerExit(Collider other)
