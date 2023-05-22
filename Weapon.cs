@@ -10,5 +10,30 @@ public class Weapon : MonoBehaviour
     public float rate;
     public BoxCollider meleeArea;
     public TrailRenderer trailEffect;
-    
+
+    public void Use()
+    {
+        if(type == Type.Melee) {
+            StopCoroutine("Swing");
+            StartCoroutine("Swing");
+        }
+    }
+
+    IEnumerator Swing()
+    {   
+        //1
+        yield return new WaitForSeconds(0.1f); //1프레임 대기
+        meleeArea.enabled = true;
+        trailEffect.enabled = true;
+        //2
+        yield return new WaitForSeconds(0.3f);  //1프레임 대기
+        meleeArea.enabled = false;
+        //3
+        yield return new WaitForSeconds(0.3f);  //1프레임 대기
+        trailEffect.enabled = false;
+
+    }
+    //매커니줌
+    //Use() 메인루틴 -> Swing() 서브루틴 _> Use()
+    //Use() 메인루틴 + Swing() 코루틴 (Co-Op) 
 }
