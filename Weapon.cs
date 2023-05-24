@@ -10,12 +10,20 @@ public class Weapon : MonoBehaviour
     public float rate;
     public BoxCollider meleeArea;
     public TrailRenderer trailEffect;
+    public Transform bulletPos;
+    public GameObject bullet;
+    public Transform bulletCasePos;
+    public GameObject bulletCase;
 
     public void Use()
     {
         if(type == Type.Melee) {
             StopCoroutine("Swing");
             StartCoroutine("Swing");
+        }
+        else if(type == Type.Range) {
+            StopCoroutine("Shot");
+            
         }
     }
 
@@ -36,4 +44,20 @@ public class Weapon : MonoBehaviour
     //매커니줌
     //Use() 메인루틴 -> Swing() 서브루틴 _> Use()
     //Use() 메인루틴 + Swing() 코루틴 (Co-Op) 
+    IEnumerator Shot()
+    {
+        //#1.총알 발사
+        GameObject intantBullet = Instantiate(bullet, bulletPos.position, bulletPos.rotation);
+        Rigidbody bulletRigid = intantBullet.GetComponent<Rigidbody>();
+        bulletRigid.velocity = bulletPos.forward * 50;
+        yield return null;
+        Debug.Log("발사");
+        //#2.탄피 배출
+        GameObject intantCase = Instantiate(bulletCase, bulletCasePos.position, bulletCasePos.rotation);
+        Rigidbody caseRigid = intantCase.GetComponent<Rigidbody>();
+        Vector3 caseVec = bulletCasePos.forward * Random.Range(-3, -2) + Vector3.up * Random.Range(2, 3);
+        caseRigid.AddForce(caseVec, ForceMode.Impulse);
+        caseRigid.AddTorque(Vector3.up * 10, ForceMode.Impulse); 
+        Debug.Log("탄피");
+    }
 }

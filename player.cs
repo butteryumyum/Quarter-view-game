@@ -79,7 +79,7 @@ public class player : MonoBehaviour
         wDown = Input.GetButton("Walk"); //걷기
         jDown = Input.GetButtonDown("Jump"); //점프 
         dDown = Input.GetButtonDown("Dodge"); //구르기
-        fDown = Input.GetButtonDown("Fire1");
+        fDown = Input.GetButton("Fire1");
         iDown = Input.GetButtonDown("Interation"); //상호작용
         sDown1 = Input.GetButtonDown("Swap1");
         sDown2 = Input.GetButtonDown("Swap2");
@@ -129,10 +129,11 @@ public class player : MonoBehaviour
 
         if(fDown && isFireReady && !isDodge && !isSwap) {
             equipWeapon.Use();
-            anim.SetTrigger("doSwing");
+            anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
             fireDelay = 0;
+            
         }
-
+        Debug.Log(equipWeapon);
     }
 
     void Dodge() //회피
