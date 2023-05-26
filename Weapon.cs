@@ -22,7 +22,7 @@ public class Weapon : MonoBehaviour
             StartCoroutine("Swing");
         }
         else if(type == Type.Range) {
-            StopCoroutine("Shot");
+            StartCoroutine("Shot");
             
         }
     }
@@ -51,13 +51,13 @@ public class Weapon : MonoBehaviour
         Rigidbody bulletRigid = intantBullet.GetComponent<Rigidbody>();
         bulletRigid.velocity = bulletPos.forward * 50;
         yield return null;
-        Debug.Log("발사");
+        
         //#2.탄피 배출
         GameObject intantCase = Instantiate(bulletCase, bulletCasePos.position, bulletCasePos.rotation);
         Rigidbody caseRigid = intantCase.GetComponent<Rigidbody>();
         Vector3 caseVec = bulletCasePos.forward * Random.Range(-3, -2) + Vector3.up * Random.Range(2, 3);
         caseRigid.AddForce(caseVec, ForceMode.Impulse);
         caseRigid.AddTorque(Vector3.up * 10, ForceMode.Impulse); 
-        Debug.Log("탄피");
+        
     }
 }
