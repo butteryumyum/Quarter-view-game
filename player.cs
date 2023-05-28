@@ -97,7 +97,7 @@ public class player : MonoBehaviour
         if(isDodge)
             moveVec = dodgeVec;
 
-        if(isSwap || isFireReady || !isReload)
+        if(isSwap || isReload || !isFireReady)
             moveVec = Vector3.zero; //움직임 제한
 
         
