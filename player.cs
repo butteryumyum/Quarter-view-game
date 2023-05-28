@@ -30,6 +30,7 @@ public class player : MonoBehaviour
     bool jDown;
     bool dDown;
     bool fDown;
+    bool rDown;
     bool iDown;
     bool sDown1;
     bool sDown2;
@@ -38,6 +39,7 @@ public class player : MonoBehaviour
     bool isJump;
     bool isDodge;
     bool isSwap;
+    bool isReload;
     bool isFireReady = true;
 
     Vector3 moveVec;
@@ -65,6 +67,7 @@ public class player : MonoBehaviour
         Move();
         Turn();
         Attack();
+        Reload();
         Jump();
         Dodge();
         Swap();
@@ -80,6 +83,7 @@ public class player : MonoBehaviour
         jDown = Input.GetButtonDown("Jump"); //점프 
         dDown = Input.GetButtonDown("Dodge"); //구르기
         fDown = Input.GetButton("Fire1");
+        rDown = Input.GetButtonDown("Reload"); //재장전
         iDown = Input.GetButtonDown("Interation"); //상호작용
         sDown1 = Input.GetButtonDown("Swap1");
         sDown2 = Input.GetButtonDown("Swap2");
@@ -90,18 +94,20 @@ public class player : MonoBehaviour
     {
        moveVec = new Vector3(hAxis, 0, vAxis).normalized;
 
-       if(isDodge)
+        if(isDodge)
             moveVec = dodgeVec;
 
-        if(isSwap || !isFireReady)
-            moveVec = Vector3.zero; //스왑할때 못움직임
+        if(isSwap || isFireReady || !isReload)
+            moveVec = Vector3.zero; //움직임 제한
 
-         //걷기 속도감소 및 뛰기
-            transform.position += moveVec * speed * (wDown ? 0.3f : 1f) * Time.deltaTime;
         
-
+    
+         //걷기 속도감소 및 뛰기
+        transform.position += moveVec * speed * (wDown ? 0.3f : 1f) * Time.deltaTime;
+        
         anim.SetBool("isRun", moveVec != Vector3.zero);
         anim.SetBool("isWalk", wDown); 
+        
     }
 
     void Turn()
@@ -134,6 +140,34 @@ public class player : MonoBehaviour
             
         }
         Debug.Log(equipWeapon);
+    }
+
+    void Reload()
+    {
+        if(equipWeapon == null)
+            return;
+
+        if(equipWeapon.type == Weapon.Type.Melee)
+            return;
+        
+        if(ammo == 0)
+            return;
+        
+        if(rDown && !isJump && !isDodge &&  !isSwap && isFireReady) {
+            anim.SetTrigger("doReload");
+            isReload = true;
+
+            Invoke("ReloadOut", 2f);
+        }
+    }
+
+    void ReloadOut()
+    {   
+        int reAmmo = ammo < equipWeapon.maxAmmo ? ammo : equipWeapon.maxAmmo;
+        equipWeapon.curAmmo = equipWeapon.maxAmmo;
+        ammo -= reAmmo;
+        isReload = false;
+        
     }
 
     void Dodge() //회피
