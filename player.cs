@@ -9,6 +9,7 @@ public class player : MonoBehaviour
     public bool[] hasWeapons;
     public GameObject[] grenadse;
     public int hasGrenades;
+    public Camera followCamera;
 
 
     public int ammo;
@@ -111,10 +112,20 @@ public class player : MonoBehaviour
     }
 
     void Turn()
-    {
+    {   
+        //1.키보드 회전
         transform.LookAt(transform.position + moveVec);
+        //2.마우스 회전
+        if(fDown) {
+        Ray ray = followCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit rayHit;
+        if(Physics.Raycast(ray, out rayHit, 100)) {
+            Vector3 nextVec = rayHit.point - transform.position;
+            nextVec.y = 0;
+            transform.LookAt(transform.position + nextVec);
+        }
     }
-
+}
     void Jump()
     {
         if (jDown && !isJump && !dDown &&!isDodge &&!isSwap) {
@@ -234,6 +245,16 @@ public class player : MonoBehaviour
                 Destroy(nearObject);
             }
         } 
+    }
+
+    void FreezeRotation()
+    {
+        rigid.angularVelocity = Vector3.zero;
+    }
+
+    void FixedUpdate() 
+    {
+        FreezeRotation();
     }
 
     void OnCollisionEnter(Collision collision)
