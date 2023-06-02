@@ -152,7 +152,7 @@ public class player : MonoBehaviour
             fireDelay = 0;
             
         }
-        Debug.Log(equipWeapon);
+        
     }
 
     void Reload()
