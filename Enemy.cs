@@ -24,19 +24,23 @@ public class Enemy : MonoBehaviour
         if(other.tag == "Melee" ) {
             Weapon weapon = other.GetComponent<Weapon>();
             curHealth -= weapon.damage;
-            StartCoroutine(OnDamage());
+            Vector3 reactVec = transform.position - other.transform.position;
+            StartCoroutine(OnDamage(reactVec));
 
             Debug.Log("Melee :" + curHealth);
         }
         else if (other.tag == "Bullet") {
             Bullet bullet = other.GetComponent<Bullet>();
             curHealth -= bullet.damage;
-            StartCoroutine(OnDamage());
+            Vector3 reactVec = transform.position - other.transform.position;
+            StartCoroutine(OnDamage(reactVec));
+            Destroy(other.gameObject);
+            
             Debug.Log("Range :" + curHealth);
         }
     }
 
-    IEnumerator OnDamage()
+    IEnumerator OnDamage(Vector3 reactVec) 
     {
         mat.color = Color.red;
         yield return new WaitForSeconds(0.1f);
@@ -47,6 +51,11 @@ public class Enemy : MonoBehaviour
         else {
             mat.color = Color.gray;
             gameObject.layer = 12;
+
+            reactVec = reactVec.normalized;
+            reactVec += Vector3.up;
+            rigid.AddForce(reactVec * 5,ForceMode.Impulse);
+
             Destroy(gameObject, 4);
         }
 

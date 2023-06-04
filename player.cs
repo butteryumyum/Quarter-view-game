@@ -176,8 +176,9 @@ public class player : MonoBehaviour
 
     void ReloadOut()
     {   
-        int reAmmo = ammo < equipWeapon.maxAmmo ? ammo : equipWeapon.maxAmmo;
-        equipWeapon.curAmmo = equipWeapon.maxAmmo;
+        int reAmmo = ammo + equipWeapon.curAmmo < equipWeapon.maxAmmo 
+        ? ammo : equipWeapon.maxAmmo - equipWeapon.curAmmo;
+        equipWeapon.curAmmo += reAmmo;
         ammo -= reAmmo;
         isReload = false;
         
