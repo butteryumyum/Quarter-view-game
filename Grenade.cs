@@ -11,7 +11,7 @@ public class Grenade : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(Explosion);
+        StartCoroutine(Explosion());
     }
 
     IEnumerator Explosion()
