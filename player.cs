@@ -9,6 +9,7 @@ public class player : MonoBehaviour
     public bool[] hasWeapons;
     public GameObject[] grenadse;
     public int hasGrenades;
+    public GameObject grenadeObj;
     public Camera followCamera;
 
 
@@ -31,6 +32,7 @@ public class player : MonoBehaviour
     bool jDown;
     bool dDown;
     bool fDown;
+    bool gDown;
     bool rDown;
     bool iDown;
     bool sDown1;
@@ -69,6 +71,7 @@ public class player : MonoBehaviour
         Move();
         Turn();
         Attack();
+        Grenade();
         Reload();
         Jump();
         Dodge();
@@ -85,6 +88,7 @@ public class player : MonoBehaviour
         jDown = Input.GetButtonDown("Jump"); //점프 
         dDown = Input.GetButtonDown("Dodge"); //구르기
         fDown = Input.GetButton("Fire1");
+        gDown = Input.GetButtonDown("Fire2"); //수류탄
         rDown = Input.GetButtonDown("Reload"); //재장전
         iDown = Input.GetButtonDown("Interation"); //상호작용
         sDown1 = Input.GetButtonDown("Swap1");
@@ -138,6 +142,27 @@ public class player : MonoBehaviour
         }
     }
 
+    void Grenade()
+    {
+        if (hasGrenades == 0)
+            return;
+        if(gDown && !isReload && !isSwap){
+            Ray ray = followCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit rayHit;
+            if  (Physics.Raycast(ray, out rayHit, 100)) {
+                Vector3 nextVec = rayHit.point - transform.position;
+                nextVec.y = 10;
+           
+                GameObject instantGrenade = Instantiate(grenadeObj, transform.position, transform.rotation);
+                Rigidbody rigidGrenade = instantGrenade.GetComponent<Rigidbody>();
+                rigidGrenade.AddForce(nextVec, ForceMode.Impulse);
+                rigidGrenade.AddForce(Vector3.back * 10, ForceMode.Impulse);
+
+                hasGrenades--;
+                grenadse[hasGrenades].SetActive(false);
+            }   
+        }
+    }
     void Attack()
     {
         if(equipWeapon == null)
