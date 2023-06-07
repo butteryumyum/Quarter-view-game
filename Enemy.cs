@@ -8,11 +8,14 @@ public class Enemy : MonoBehaviour
     public int maxHealth;
     public int curHealth;
     public Transform target;
+    public bool isChase;
+    
 
     Rigidbody rigid;
     BoxCollider boxCollider;
     Material mat;
     NavMeshAgent nav;
+    Animator anim;
 
     void Awake()
     {
@@ -20,18 +23,32 @@ public class Enemy : MonoBehaviour
         boxCollider = GetComponent<BoxCollider>();
         mat = GetComponentInChildren<MeshRenderer>().material;
         nav = GetComponent<NavMeshAgent>();
+        anim = GetComponentInChildren<Animator>();
         
+
+        Invoke("ChaseStart", 2);
+    }
+
+    void ChaseStart()
+    {
+        isChase = true;
+        anim.SetBool("isWalk", true);
     }
 
     void Update()
-    {
-        nav.SetDestination(target.position);
+    {   
+       
+        
+        if(isChase)
+            nav.SetDestination(target.position);
     }
 
     void FreezeVelocity()
     {
-        rigid.velocity = Vector3.zero;
-        rigid.angularVelocity = Vector3.zero;
+        if (isChase){
+            rigid.velocity = Vector3.zero;
+            rigid.angularVelocity = Vector3.zero;
+        }
     }
 
     void FixedUpdate() 
@@ -79,7 +96,10 @@ public class Enemy : MonoBehaviour
         else {
             mat.color = Color.gray;
             gameObject.layer = 12; //적 사망
-
+            isChase = false; 
+            nav.enabled = false;
+            anim.SetTrigger("doDie");
+            
             if (isGrenade)  { //수류탄에 맞았을 경우 코루틴
                 reactVec = reactVec.normalized;
                 reactVec += Vector3.up * 3; 
