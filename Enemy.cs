@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
     public int maxHealth;
     public int curHealth;
     public Transform target;
+    public BoxCollider meleeArea;
     public bool isChase;
     
 
