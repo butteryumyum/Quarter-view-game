@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     public Transform target;
     public BoxCollider meleeArea;
     public bool isChase;
+    public bool isAttack;
     
 
     Rigidbody rigid;
@@ -55,10 +56,44 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void FixedUpdate() 
+    void Targerting()
     {
+        float targetRadius = 1f;
+        float targetRange = 2.5f;
+
+         RaycastHit[] rayHits = 
+            Physics.SphereCastAll(transform.position,
+                                targetRadius, 
+                                transform.forward,
+                                targetRange, 
+                                LayerMask.GetMask("Player"));
+        if(rayHits.Length > 0 && !isAttack) {
+            StartCoroutine(Attack());
+        }
+    }   
+
+    IEnumerator Attack()
+    {   
+        isChase = false;
+        isAttack = true;
+        anim.SetBool("isAttack", true); 
+
+        yield return new WaitForSeconds(0.2f);
+        meleeArea.enabled = true; //공격 활성화
+
+        yield return new WaitForSeconds(1f); 
+        meleeArea.enabled = false; //공격 비활성화
+
+        yield return new WaitForSeconds(1f);
+        isChase = true;
+        isAttack = false;
+        anim.SetBool("isAttack", false);
+    }
+
+    void FixedUpdate() 
+    {   
+        Targerting();
         FreezeVelocity();
-        
     }
 
     void OnTriggerEnter(Collider other)

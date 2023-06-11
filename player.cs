@@ -349,7 +349,7 @@ public class player : MonoBehaviour
         foreach(MeshRenderer mesh in meshs) {
             mesh.material.color = Color.yellow;
         }
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
 
         isDamage = false;
         foreach(MeshRenderer mesh in meshs) {
