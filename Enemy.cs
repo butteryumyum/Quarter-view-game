@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
-{
+{   
+    public enum Type {A, B , C};
+    public Type enemyType;
     public int maxHealth;
     public int curHealth;
     public Transform target;
@@ -58,8 +60,25 @@ public class Enemy : MonoBehaviour
 
     void Targerting()
     {
-        float targetRadius = 1f;
-        float targetRange = 2.5f;
+        float targetRadius = 0;
+        float targetRange = 0;
+
+        switch (enemyType) {
+            case Type.A:
+                targetRadius = 1f;
+                targetRange = 3f;
+                break;
+            case Type.B:
+                targetRadius = 0.7f;
+                targetRange = 10f;
+                break;
+            case Type.C:
+
+                break;
+
+        }
+       
+       
 
          RaycastHit[] rayHits = 
             Physics.SphereCastAll(transform.position,
@@ -78,16 +97,39 @@ public class Enemy : MonoBehaviour
         isAttack = true;
         anim.SetBool("isAttack", true); 
 
-        yield return new WaitForSeconds(0.2f);
-        meleeArea.enabled = true; //공격 활성화
+        switch(enemyType) {
+            case Type.A:
+                yield return new WaitForSeconds(0.2f);
+                meleeArea.enabled = true; //공격 활성화
 
-        yield return new WaitForSeconds(1f); 
-        meleeArea.enabled = false; //공격 비활성화
+                yield return new WaitForSeconds(1f); 
+                meleeArea.enabled = false; //공격 비활성화
 
-        yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(1f);
+                isChase = true;
+                isAttack = false;
+                anim.SetBool("isAttack", false);
+            break;
+            case Type.B:
+                yield return new WaitForSeconds(0.1f);
+                rigid.AddForce(transform.forward * 20,ForceMode.Impulse); //돌진
+                meleeArea.enabled = true;
+
+                yield return new WaitForSeconds(0.5f); 
+                rigid.velocity = Vector3.zero;
+                meleeArea.enabled = false;
+
+                yield return new WaitForSeconds(1.7f);
+            break;
+            case Type.C:
+
+            break;
+            
+        }
         isChase = true;
         isAttack = false;
-        anim.SetBool("isAttack", false);
+        anim.SetBool("isAttack", false); 
+       
     }
 
     void FixedUpdate() 
