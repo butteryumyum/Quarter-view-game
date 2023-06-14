@@ -337,6 +337,10 @@ public class player : MonoBehaviour
         if (!isDamage) {
             Bullet enemyBullet = other.GetComponent<Bullet>();
             health -= enemyBullet.damage;
+
+            if(other.GetComponent<Rigidbody>() != null)
+                Destroy(other.gameObject); //미사일 맞았을때 사라짐 
+
             StartCoroutine(OnDamage());
         }
         
@@ -347,7 +351,7 @@ public class player : MonoBehaviour
     {   
         isDamage = true;
         foreach(MeshRenderer mesh in meshs) {
-            mesh.material.color = Color.yellow;
+            mesh.material.color = Color.red;
         }
         yield return new WaitForSeconds(1f);
 
