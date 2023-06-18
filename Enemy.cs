@@ -59,15 +59,15 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void Targerting()
+    void Targerting() //몹 사거리
     {
         float targetRadius = 0;
         float targetRange = 0;
 
         switch (enemyType) {
-            case Type.A:
+            case Type.A: 
                 targetRadius = 1f;
-                targetRange = 3f;
+                targetRange = 3f;//감지 범위
                 break;
             case Type.B:
                 targetRadius = 0.7f;
@@ -101,7 +101,7 @@ public class Enemy : MonoBehaviour
         anim.SetBool("isAttack", true); 
 
         switch(enemyType) {
-            case Type.A:
+            case Type.A: //일반 몹
                 yield return new WaitForSeconds(0.2f);
                 meleeArea.enabled = true; //공격 활성화
 
@@ -113,7 +113,7 @@ public class Enemy : MonoBehaviour
                 isAttack = false;
                 anim.SetBool("isAttack", false);
             break;
-            case Type.B:
+            case Type.B: //돌격형 몹
                 yield return new WaitForSeconds(0.1f);
                 rigid.AddForce(transform.forward * 20,ForceMode.Impulse); //돌진
                 meleeArea.enabled = true;
@@ -124,7 +124,7 @@ public class Enemy : MonoBehaviour
 
                 yield return new WaitForSeconds(1.7f);
             break;
-            case Type.C:
+            case Type.C: //원거리 몹
                 yield return new WaitForSeconds(0.5f); 
                 GameObject instantBullet = Instantiate(bullet, transform.position, transform.rotation);
                 Rigidbody rigidBullet = instantBullet.GetComponent<Rigidbody>();
@@ -155,7 +155,7 @@ public class Enemy : MonoBehaviour
             Vector3 reactVec = transform.position - other.transform.position;
             StartCoroutine(OnDamage(reactVec, false));
 
-            Debug.Log("Melee :" + curHealth);
+            Debug.Log("Melee :" + curHealth);//근거리 공격
         }
         else if (other.tag == "Bullet") {
             Bullet bullet = other.GetComponent<Bullet>();
@@ -164,7 +164,7 @@ public class Enemy : MonoBehaviour
             StartCoroutine(OnDamage(reactVec, false));
             Destroy(other.gameObject);
             
-            Debug.Log("Range :" + curHealth);
+            Debug.Log("Range :" + curHealth);//원거리 공격
         }
     }
 
@@ -194,7 +194,7 @@ public class Enemy : MonoBehaviour
                 reactVec = reactVec.normalized;
                 reactVec += Vector3.up * 3; 
 
-                rigid.freezeRotation = false; //수류탄 맞았을때 회전
+                rigid.freezeRotation = false; //수류탄 맞았을때 날라가는 모션
                 rigid.AddForce(reactVec * 5,ForceMode.Impulse);
                 rigid.AddTorque(reactVec * 15, ForceMode.Impulse); 
             }
