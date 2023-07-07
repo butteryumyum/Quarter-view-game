@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {   
-    public enum Type {A, B , C};
+    public enum Type {A, B , C, D};
     public Type enemyType;
     public int maxHealth;
     public int curHealth;
@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour
 
     Rigidbody rigid;
     BoxCollider boxCollider;
-    Material mat;
+    MeshRenderer[] meshs;
     NavMeshAgent nav;
     Animator anim;
 
@@ -26,12 +26,12 @@ public class Enemy : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
-        mat = GetComponentInChildren<MeshRenderer>().material;
+        meshs = GetComponentsInChildren<MeshRenderer>();
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
         
-
-        Invoke("ChaseStart", 2);
+        if(enemyType != Type.D)
+            Invoke("ChaseStart", 2);
     }
 
     void ChaseStart()
@@ -44,7 +44,7 @@ public class Enemy : MonoBehaviour
     {   
        
         
-        if(nav.enabled){
+        if(nav.enabled && enemyType != Type.D){
             nav.SetDestination(target.position);
             nav.isStopped = !isChase;
         }
@@ -60,8 +60,9 @@ public class Enemy : MonoBehaviour
     }
 
     void Targerting()
-    {
-        float targetRadius = 0;
+    {   
+        if(enemyType != Type.D) {
+            float targetRadius = 0;
         float targetRange = 0;
 
         switch (enemyType) {
@@ -80,9 +81,6 @@ public class Enemy : MonoBehaviour
                 break;
 
         }
-       
-       
-
          RaycastHit[] rayHits = 
             Physics.SphereCastAll(transform.position,
                                 targetRadius, 
@@ -90,9 +88,10 @@ public class Enemy : MonoBehaviour
                                 targetRange, 
                                 LayerMask.GetMask("Player"));
         if(rayHits.Length > 0 && !isAttack) {
-            StartCoroutine(Attack());
-        }
-    }   
+            StartCoroutine(Attack()); 
+            }
+        }   
+    }
 
     IEnumerator Attack()
     {   
@@ -176,15 +175,20 @@ public class Enemy : MonoBehaviour
     }
 
     IEnumerator OnDamage(Vector3 reactVec, bool isGrenade) // 수류탄 이외 다른것을 이용해 데미지를 입음
-    {
-        mat.color = Color.red;
+    {   
+        foreach(MeshRenderer mseh in meshs)
+            mseh.material.color = Color.red;//색변경
+
         yield return new WaitForSeconds(0.1f);
 
         if(curHealth > 0){
-            mat.color = Color.white;
+            foreach(MeshRenderer mseh in meshs)
+                mseh.material.color = Color.white;//색변경
         }
         else {
-            mat.color = Color.gray;
+            foreach(MeshRenderer mseh in meshs)
+                mseh.material.color = Color.gray; //색변경
+
             gameObject.layer = 12; //적 사망
             isChase = false; 
             nav.enabled = false;
@@ -205,6 +209,7 @@ public class Enemy : MonoBehaviour
                  
             }
             
+            if(enemyType != Type.D)
             Destroy(gameObject, 4);
         }
 
