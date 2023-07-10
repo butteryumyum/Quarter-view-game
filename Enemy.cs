@@ -16,11 +16,11 @@ public class Enemy : MonoBehaviour
     public bool isAttack;
     
 
-    Rigidbody rigid;
-    BoxCollider boxCollider;
-    MeshRenderer[] meshs;
-    NavMeshAgent nav;
-    Animator anim;
+    public Rigidbody rigid;
+    public BoxCollider boxCollider;
+    public MeshRenderer[] meshs;
+    public NavMeshAgent nav;
+    public Animator anim;
 
     void Awake()
     {
