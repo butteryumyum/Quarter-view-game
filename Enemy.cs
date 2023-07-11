@@ -14,6 +14,7 @@ public class Enemy : MonoBehaviour
     public GameObject bullet;
     public bool isChase;
     public bool isAttack;
+    public bool isDead;
     
 
     public Rigidbody rigid;
@@ -61,7 +62,7 @@ public class Enemy : MonoBehaviour
 
     void Targerting()
     {   
-        if(enemyType != Type.D) {
+        if(!isDead && enemyType != Type.D) {
             float targetRadius = 0;
         float targetRange = 0;
 
@@ -190,6 +191,7 @@ public class Enemy : MonoBehaviour
                 mseh.material.color = Color.gray; //색변경
 
             gameObject.layer = 12; //적 사망
+            isDead = true;
             isChase = false; 
             nav.enabled = false;
             anim.SetTrigger("doDie");

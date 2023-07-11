@@ -338,21 +338,23 @@ public class player : MonoBehaviour
             Bullet enemyBullet = other.GetComponent<Bullet>();
             health -= enemyBullet.damage;
 
-            if(other.GetComponent<Rigidbody>() != null)
-                Destroy(other.gameObject); //미사일 맞았을때 사라짐 
-
-            StartCoroutine(OnDamage());
+            bool isBossAtk = other.name == "Boss Melee Area";
+            StartCoroutine(OnDamage(isBossAtk));
         }
-        
+        if(other.GetComponent<Rigidbody>() != null)
+                Destroy(other.gameObject); //미사일
     }
 }
 
-    IEnumerator OnDamage()
+    IEnumerator OnDamage(bool isBossAtk)
     {   
         isDamage = true;
         foreach(MeshRenderer mesh in meshs) {
             mesh.material.color = Color.red;
         }
+        if(isBossAtk)
+            rigid.AddForce(transform.forward * -25, ForceMode.Impulse);
+
         yield return new WaitForSeconds(1f);
 
         isDamage = false;
@@ -360,6 +362,8 @@ public class player : MonoBehaviour
             mesh.material.color = Color.white;
         }
 
+        if (isBossAtk)
+            rigid.velocity = Vector3.zero;
     }
 
     void OnTriggerStay(Collider other)
