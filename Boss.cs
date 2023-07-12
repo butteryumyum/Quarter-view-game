@@ -14,7 +14,7 @@ public class Boss : Enemy
     Vector3 tauntVec;
    
 
-    void AWake()
+    void Awake()
     {   
         rigid = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
@@ -47,7 +47,7 @@ public class Boss : Enemy
     IEnumerator Think()
     {
         yield return new WaitForSeconds(0.1f);
-
+        Debug.Log("코루틴작동");
         int ranAction = Random.Range(0, 5);
         switch (ranAction) {
             case 0:
@@ -71,7 +71,7 @@ public class Boss : Enemy
         GameObject instantMissileA = Instantiate(missile, missilePortA.position, missilePortA.rotation);
         BossMissile bossMissileA = instantMissileA.GetComponent<BossMissile>();
         bossMissileA.target = target;
-
+        
         yield return new WaitForSeconds(0.3f);
         GameObject instantMissileB = Instantiate(missile, missilePortB.position, missilePortB.rotation);
         BossMissile bossMissileB = instantMissileB.GetComponent<BossMissile>();
