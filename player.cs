@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class player : MonoBehaviour
+public class Player : MonoBehaviour
 {   
     public float speed;
     public GameObject[] weapons;
@@ -274,6 +274,10 @@ public class player : MonoBehaviour
 
                 Destroy(nearObject);
             }
+            else if(nearObject.tag == "Shop") {
+                Shop shop = nearObject.GetComponent<Shop>();
+                shop.Enter(this);
+            }
         } 
     }
 
@@ -368,7 +372,7 @@ public class player : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if(other.tag == "Weapon") 
+        if(other.tag == "Weapon" || other.tag == "Shop") 
             nearObject = other.gameObject;
 
         
@@ -378,6 +382,11 @@ public class player : MonoBehaviour
     {
         if (other.tag == "Weapon")
             nearObject = null;
+        else if (other.tag == "Shop") {
+            Shop shop = nearObject.GetComponent<Shop>();
+            shop.Exit();
+            nearObject = null;
+        }
     } 
 
 }

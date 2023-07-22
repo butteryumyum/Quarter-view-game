@@ -10,6 +10,8 @@ public class BossMissile : Bullet
     void Awake()
     {
         nav = GetComponent<NavMeshAgent>();
+
+        Destroy(gameObject, 8);
     }
 
     
