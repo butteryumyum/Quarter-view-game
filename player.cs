@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     public int coin;
     public int health;
    
-
+    public int score;
     public int maxAmmo;
     public int maxCoin;
     public int maxHealth;
@@ -56,7 +56,7 @@ public class Player : MonoBehaviour
     MeshRenderer[] meshs; 
 
     GameObject nearObject;
-    Weapon equipWeapon;
+    public Weapon equipWeapon;
     int equipWeaponIndex = -1;
     float fireDelay;
 
