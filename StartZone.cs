@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class StartZone : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+   public GameManager manager;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+   void OnTriggerEnter(Collider other)
+   {
+        if (other.gameObject.tag == "Player")
+            manager.StageStart();
+   }
 }

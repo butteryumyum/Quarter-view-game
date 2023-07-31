@@ -9,9 +9,11 @@ public class Enemy : MonoBehaviour
     public Type enemyType;
     public int maxHealth;
     public int curHealth;
+    public int score;
     public Transform target;
     public BoxCollider meleeArea;
     public GameObject bullet;
+    public GameObject[] coins;
     public bool isChase;
     public bool isAttack;
     public bool isDead;
@@ -195,6 +197,10 @@ public class Enemy : MonoBehaviour
             isChase = false; 
             nav.enabled = false;
             anim.SetTrigger("doDie");
+            Player player = target.GetComponent<Player>();
+            player.score += score;
+            int ranCoin = Random.Range(0, 3);
+            Instantiate(coins[ranCoin], transform.position, Quaternion.identity);
             
             if (isGrenade)  { //수류탄에 맞았을 경우 코루틴
                 reactVec = reactVec.normalized;
@@ -211,7 +217,7 @@ public class Enemy : MonoBehaviour
                  
             }
             
-            if(enemyType != Type.D)
+            
             Destroy(gameObject, 4);
         }
 
