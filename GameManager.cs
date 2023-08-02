@@ -20,6 +20,10 @@ public class GameManager : MonoBehaviour
     public int enemyCntB;
     public int enemyCntC;
 
+    public Transform[] enemyZones;
+    public GameObject[] enemyies;
+    public List<int> enemyList;
+
     public GameObject menuPanel;
     public GameObject gamePanel;
     public Text maxScoreTxt;
@@ -40,7 +44,8 @@ public class GameManager : MonoBehaviour
     public RectTransform bossHealthBar;
 
     public void Awake()
-    {
+    {   
+        enemyList = new List<int>();
         maxScoreTxt.text = string.Format("{0:n0}" ,PlayerPrefs.GetInt("MaxScore"));
     }
 
@@ -61,6 +66,9 @@ public class GameManager : MonoBehaviour
         weaponShop.SetActive(false);
         startZone.SetActive(false);
 
+        foreach(Transform zone in enemyZones)
+            zone.gameObject.SetActive(true);
+
         isBattle = true;
         StartCoroutine(InBattle());
     }
@@ -73,15 +81,29 @@ public class GameManager : MonoBehaviour
         weaponShop.SetActive(true);
         startZone.SetActive(true);
 
+         foreach (Transform zone in enemyZones)
+            zone.gameObject.SetActive(false);
         
         isBattle = false;
         stage++;
     }
 
     IEnumerator InBattle()
-    {
-        yield return new WaitForSeconds(5);
-        StageEnd();
+    {   
+        for(int index=0; index < stage; index++) {
+            int ran = Random.Range(0, 3);
+            enemyList.Add(ran);
+
+        }
+
+        while (enemyList.Count > 0) {
+            int ranZone = Random.Range(0, 4);
+            GameObject instantEnemy = Instantiate(enemyies[enemyList[0]], enemyZones[ranZone].position, enemyZones[ranZone].rotation);
+            Enemy enemy = instantEnemy.GetComponent<Enemy>();
+            enemy.target = player.transform;
+            enemyList.RemoveAt(0);
+            yield return new WaitForSeconds(4f);
+        }
     }
 
     void Update()
@@ -120,7 +142,8 @@ public class GameManager : MonoBehaviour
         enemyBTxt.text = enemyCntB.ToString();
         enemyCTxt.text = enemyCntC.ToString();
         //보스체력바 변화
-        bossHealthBar.localScale = new Vector3((float)boss.curHealth / boss.maxHealth, 1 , 1);
+        if(boss != null)
+            bossHealthBar.localScale = new Vector3((float)boss.curHealth / boss.maxHealth, 1 , 1);
     }
 }
 
