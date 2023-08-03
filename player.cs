@@ -141,7 +141,7 @@ public class Player : MonoBehaviour
     void Jump()
     {
         if (jDown && !isJump && !dDown &&!isDodge &&!isSwap && !isShop) {
-            rigid.AddForce(Vector3.up * 16, ForceMode.Impulse);
+            rigid.AddForce(Vector3.up * 15, ForceMode.Impulse);
             anim.SetBool("isJump", true);
             anim.SetTrigger("doJump");
             isJump = true;
@@ -389,8 +389,8 @@ public class Player : MonoBehaviour
             nearObject = null;
         else if (other.tag == "Shop") {
             Shop shop = nearObject.GetComponent<Shop>();
-            shop.Exit();
             isShop = false;
+            shop.Exit();
             nearObject = null;
         }
     } 
