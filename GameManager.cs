@@ -61,6 +61,11 @@ public class GameManager : MonoBehaviour
         player.gameObject.SetActive(true);
     }
 
+    public void GameOver()
+    {
+        
+    }
+
     public void StageStart()
     {   
         itemShop.SetActive(false);
