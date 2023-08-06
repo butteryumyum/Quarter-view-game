@@ -381,7 +381,7 @@ public class Player : MonoBehaviour
 
     }
 
-    void OnDie() 
+    public void OnDie() 
     {
         anim.SetTrigger("doDie");
         isDead = true;
