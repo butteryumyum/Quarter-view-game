@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     public Camera followCamera;
     public GameManager manager;
 
+    
+
 
     public int ammo;
     public int coin;
@@ -147,6 +149,8 @@ public class Player : MonoBehaviour
             anim.SetBool("isJump", true);
             anim.SetTrigger("doJump");
             isJump = true;
+
+            
         }
     }
 
@@ -366,6 +370,9 @@ public class Player : MonoBehaviour
         if(isBossAtk)
             rigid.AddForce(transform.forward * -25, ForceMode.Impulse);
 
+        if(health <= 0 && !isDead) 
+            OnDie();
+
         yield return new WaitForSeconds(1f);
 
         isDamage = false;
@@ -376,9 +383,7 @@ public class Player : MonoBehaviour
         if (isBossAtk)
             rigid.velocity = Vector3.zero;
 
-        if(health <= 0) 
-            OnDie();
-
+        
     }
 
     public void OnDie() 

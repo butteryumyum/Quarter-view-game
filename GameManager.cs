@@ -52,6 +52,9 @@ public class GameManager : MonoBehaviour
     {   
         enemyList = new List<int>();
         maxScoreTxt.text = string.Format("{0:n0}" ,PlayerPrefs.GetInt("MaxScore"));
+
+        if(PlayerPrefs.HasKey("MaxScore"))
+            PlayerPrefs.SetInt("MaxScore", 0);
     }
 
     public void GameStart()
@@ -62,6 +65,7 @@ public class GameManager : MonoBehaviour
         menuPanel.SetActive(false);
         gamePanel.SetActive(true);
 
+        
         player.gameObject.SetActive(true);
     }
 
