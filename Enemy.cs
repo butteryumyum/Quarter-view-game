@@ -190,7 +190,7 @@ public class Enemy : MonoBehaviour
             foreach(MeshRenderer mseh in meshs)
                 mseh.material.color = Color.white;//색변경
                 
-            yield return new WaitForSeconds(0.1f); 
+            yield return new WaitForSeconds(0.2f); 
         }
         else {
             foreach(MeshRenderer mseh in meshs)
